@@ -1,3 +1,2 @@
 #!/bin/sh
-
-python src/crawler.py
+python src/crawler.py $@

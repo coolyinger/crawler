@@ -12,7 +12,7 @@ try:
 except ImportError:
     codecs = None
 
-import config
+import conf
 import utils
 
 class DateRotaingFileHandler (handlers.TimedRotatingFileHandler):
@@ -44,7 +44,7 @@ class DateRotaingFileHandler (handlers.TimedRotatingFileHandler):
 def setup_logging (appname, namebyPID = True):
 
     FILE_NAME = "%s.log" % appname
-    BASE_DIR = config.log_path
+    BASE_DIR = conf.LOG_PATH
     FILE_MODE = "ae"
     FILE_FORMAT = "[%(asctime)s %(process)-5d (%(thread)d)] " \
             "%(levelname)-7s (%(filename)s:%(lineno)d) : %(message)s"
