@@ -13,6 +13,8 @@ if not IP:
     IP = "localhost"
 if not PORT:
     PORT = 27017
+if not SLAVE:
+    SLAVE = False
 
 
 def check_config ():

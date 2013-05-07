@@ -1,59 +1,39 @@
 #!/bin/env python
 #-*- coding:utf-8 -*-
 
-import fcntl
-import os
-import sys
-import log
-import logging
-import optparse
+import pymongo
+from pymongo.connection import Connection
 
 import conf
+from mongoUtil import mongoUtil
 
-APP_NAME = 'xlcrawler'
-APP_VERSION = "1.0"
+class Crawler (object):
 
-def pidfile_acquire (pidfile):
-    fp = open (pidfile, "w")
-    fcntl.lockf (fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    return fp
+    def __init__ (self, testmode = False):
+        self.testmode = testmode
+        self.starturls = mongoUtil (conf.DB, "starturl_test",
+                                    conf.IP, conf.PORT)
 
-def pidfile_release (pidfile, pidfile_fd):
-    fcntl.lockf (pidfile_fd, fcntl.LOCK_UN)
-    os.unlink (pidfile)
+    def start_test (self):
+        """
+            crawl few link to checking  whether XPATH need modify
+        """
+        print '=====test'
 
-def parse_commandline ():
+    def start (self):
+        if self.testmode:
+            self.start_test ()
+            return
 
-    optParse = optparse.OptionParser (version = APP_VERSION,
-                                    usage = APP_NAME + " [options]")
-    optParse.add_option ("--test", action = "store_true", dest = "test",
-                         help = "crawling few link to test XPATH",
-                         default = False)
-    optParse.add_option ("--clean", action = "store_true", dest = "clean",
-                         help = "cleanup expired DATA and FILE",
-                         default = False)
-    return optParse.parse_args ()
+        self.reset_starturls ()
 
-def main ():
+    def reset_starturls (self):
+        self.starturls.update_items ({}, {"locked_by_host":""})
 
-    log.setup_logging (APP_NAME, True)
 
-    (option, ignore) = parse_commandline ()
-
-    if not conf.check_config ():
-        sys.exit (1)
-
-    #logging.info ("%s startup ..." % APP_NAME)
-
-    #pidfile_path = "%s.pid" % APP_NAME
-    #pidfile_fd = pidfile_acquire (pidfile_path)
-
-    #try:
-    #    import time
-    #    time.sleep (5)
-    #finally:
-    #    pidfile_release (pidfile_path, pidfile_fd)
-    #logging.info ("%s finish ..." % APP_NAME)
+def test ():
+    crawl = Crawler ()
+    crawl.start ()
 
 if __name__ == "__main__":
-    main ()
+    test ()

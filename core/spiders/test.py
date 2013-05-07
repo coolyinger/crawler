@@ -1,4 +1,5 @@
 from scrapy.spider import BaseSpider
+from core.items import CoreItem
 
 class TestSpider(BaseSpider):
     name = "test"
@@ -9,4 +10,4 @@ class TestSpider(BaseSpider):
         )
 
     def parse(self, response):
-        self.log ("A response from %s just arrived!" % response.url)
+        print "A response from %s just arrived!" % response.url

@@ -15,6 +15,9 @@ class mongoUtil (object):
         db = conn[database]
         self.form = db[table]
 
+    def update_items (self, spec, val):
+        self.form.update (spec, {"$set":val}, upsert = False, multi = True)
+
     @staticmethod
     def check_conn (ip = "localhost", port = 27017):
         try:
@@ -27,18 +30,10 @@ class mongoUtil (object):
             conn.close ()
             return True
 
-
-
-
-
-
 def test ():
     isOk = mongoUtil.check_conn ("localhost", "27017")
     print isOk
 
-
 if __name__ == "__main__":
     test ()
-
-
 

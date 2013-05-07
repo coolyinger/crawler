@@ -5,3 +5,5 @@ LOG_PATH = "/home/log/"
 
 IP = "localhost"
 PORT = 27017
+DB = "marketcrawler"
+SLAVE = False
