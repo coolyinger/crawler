@@ -18,6 +18,14 @@ class mongoUtil (object):
     def update_items (self, spec, val):
         self.form.update (spec, {"$set":val}, upsert = False, multi = True)
 
+
+    def find_and_modify (self, query = {}, update = None, sort = {},
+                         fields = {}, upsert = False, new = False):
+        return self.form.find_and_modify (query = query,
+                                          update = update, sort = sort,
+                                          fields = fields, upsert = upsert,
+                                          new = new)
+
     @staticmethod
     def check_conn (ip = "localhost", port = 27017):
         try:

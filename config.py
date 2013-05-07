@@ -7,3 +7,5 @@ IP = "localhost"
 PORT = 27017
 DB = "marketcrawler"
 SLAVE = False
+
+MARKETS = ["AnzhItem", "HiApkItem"]

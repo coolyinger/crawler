@@ -14,15 +14,6 @@ from crawler import Crawler
 APP_NAME = 'xlcrawler'
 APP_VERSION = "1.0"
 
-def pidfile_acquire (pidfile):
-    fp = open (pidfile, "w")
-    fcntl.lockf (fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    return fp
-
-def pidfile_release (pidfile, pidfile_fd):
-    fcntl.lockf (pidfile_fd, fcntl.LOCK_UN)
-    os.unlink (pidfile)
-
 def parse_commandline ():
 
     optParse = optparse.OptionParser (version = APP_VERSION,
@@ -48,24 +39,17 @@ def main ():
     if not conf.check_config ():
         sys.exit (1)
 
+    logging.info ("%s startup by %s" % (APP_NAME, sys.argv))
+
     if option.clean:
         crawl_clean ()
         return
 
+
     crawler = Crawler (testmode = option.test)
     crawler.start ()
 
-    #logging.info ("%s startup ..." % APP_NAME)
-
-    #pidfile_path = "%s.pid" % APP_NAME
-    #pidfile_fd = pidfile_acquire (pidfile_path)
-
-    #try:
-    #    import time
-    #    time.sleep (5)
-    #finally:
-    #    pidfile_release (pidfile_path, pidfile_fd)
-    #logging.info ("%s finish ..." % APP_NAME)
+    logging.info ("%s finish ..." % APP_NAME)
 
 if __name__ == "__main__":
     main ()
