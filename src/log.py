@@ -46,7 +46,7 @@ def setup_logging (appname, namebyPID = True):
     FILE_NAME = "%s.log" % appname
     BASE_DIR = config.log_path
     FILE_MODE = "ae"
-    FILE_FORMAT = "[%(asctime)s %(process)-5d] " \
+    FILE_FORMAT = "[%(asctime)s %(process)-5d (%(thread)d)] " \
             "%(levelname)-7s (%(filename)s:%(lineno)d) : %(message)s"
     DATEFMT = "%Y-%m-%d %H:%M:%S"
 

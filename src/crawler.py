@@ -18,7 +18,7 @@ def pidfile_release (pidfile, pidfile_fd):
 
 def main ():
 
-    log.setup_logging (APP_NAME, False)
+    log.setup_logging (APP_NAME, True)
     logging.info ("%s startup ..." % APP_NAME)
 
     pidfile_path = "%s.pid" % APP_NAME
