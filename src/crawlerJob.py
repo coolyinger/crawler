@@ -4,7 +4,7 @@
 import subprocess
 
 class crawlerJob (object):
-    
+
     def __init__ (self, arglist):
         self.market = arglist[0]
         self.links = arglist[1]
