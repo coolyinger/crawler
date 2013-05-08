@@ -2,22 +2,27 @@
 #-*- coding:utf-8 -*-
 
 import subprocess
+import logging
+import pprint
 
 class crawlerJob (object):
 
+    # [market, links, category_general, rule]
+
     def __init__ (self, arglist):
-        self.market = arglist[0]
+        self.market = arglist[0].strip ()
         self.links = arglist[1]
         self.category_general = arglist[2]
         self.rule = arglist[3]
 
     def start (self):
-        #subproc = subprocess.Popen(
-        #        "sudo nohup scrapy crawl umspider > "+log_path+item_name+".file", 
-        #        stdin = subprocess.PIPE,shell = True)
-        subproc = subprocess.Popen(
-                "scrapy crawl test > nohup.out",
-                stdin = subprocess.PIPE, shell = True)
+
+        if len (self.links) == 0 or (not self.market):
+            logging.warn ("Skip links: %s" % pprint.pformat (self.links))
+            return
+
+        subproc = subprocess.Popen("scrapy crawl UMSpider",
+                                   stdin = subprocess.PIPE, shell = True)
         subproc.stdin.write (self.market + "\n")
         subproc.stdin.write (str (self.links) + "\n")
         subproc.stdin.write (self.category_general + "\n")
@@ -28,10 +33,6 @@ class crawlerJob (object):
 
 def test ():
     arglist = []
-    arglist.append ("market")
-    arglist.append (["link1", "link2", "link3"])
-    arglist.append ("category")
-    arglist.append ("rule")
     job = crawlerJob (arglist)
     job.start ()
 

@@ -58,8 +58,6 @@ class Crawler (object):
                 fields = ["market", "rule", "links", "category_general", "_id"])
         return item
 
-
-
 def test ():
     crawl = Crawler ()
     crawl.start ()

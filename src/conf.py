@@ -17,6 +17,9 @@ if not PORT:
 if not SLAVE:
     SLAVE = False
 
+APP_NAME = "xlcrawler"
+APP_VERSION = "1.0"
+
 
 host = utils.get_mac_address () + ":" + utils.get_ip_address ()
 

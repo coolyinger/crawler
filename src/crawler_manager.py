@@ -11,13 +11,11 @@ import optparse
 import conf
 from crawler import Crawler
 
-APP_NAME = 'xlcrawler'
-APP_VERSION = "1.0"
 
 def parse_commandline ():
 
-    optParse = optparse.OptionParser (version = APP_VERSION,
-                                    usage = APP_NAME + " [options]")
+    optParse = optparse.OptionParser (version = conf.APP_VERSION,
+                                    usage = conf.APP_NAME + " [options]")
     optParse.add_option ("--test", action = "store_true", dest = "test",
                          help = "crawling few link to test XPATH",
                          default = False)
@@ -32,14 +30,14 @@ def crawl_clean ():
 
 def main ():
 
-    log.setup_logging (APP_NAME, True)
+    log.setup_logging (conf.APP_NAME, False)
 
     (option, ignore) = parse_commandline ()
 
     if not conf.check_config ():
         sys.exit (1)
 
-    logging.info ("%s startup by %s" % (APP_NAME, sys.argv))
+    logging.info ("%s startup by %s" % (conf.APP_NAME, sys.argv))
 
     if option.clean:
         crawl_clean ()
@@ -49,7 +47,7 @@ def main ():
     crawler = Crawler (testmode = option.test)
     crawler.start ()
 
-    logging.info ("%s finish ..." % APP_NAME)
+    logging.info ("%s finish ..." % conf.APP_NAME)
 
 if __name__ == "__main__":
     main ()
