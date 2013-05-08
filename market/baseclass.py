@@ -15,5 +15,5 @@ class baseclass (object):
 
     @classmethod
     def parse (cls, reponse):
-        item = CoreItem
+        item = CoreItem ()
         return item

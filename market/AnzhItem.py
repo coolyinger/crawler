@@ -6,83 +6,95 @@ from baseclass import baseclass
 class AnzhItemConfig(baseclass):
     domain = "anzhi.com"
 
-#    config = {
-#        "name": {
-#            "select": '//div[@class=\"detail_line\"]/h3/text()',
-#            "result": [0],
-#        },
-#
-#        "update_time": {
-#            "select": "//ul[@id=\"detail_line_ul\"]/li/text()",
-#            "result": [1],
-#            "additional": True
-#        },
-#
-#        "developer": {
-#            "select": "//div[@class=\"detail_line\"]/span/text()",
-#            "result": [1],
-#            "additional": True
-#        },
-#
-#        "icon": {
-#            "select": "//div[@class=\"detail_icon\"]/img/@src",
-#            "result": [0]
-#        },
-#
-#        "download_num": {
-#            "select": "//ul[@id=\"detail_line_ul\"]//li/span/text()",
-#            "result": [0],
-#            "additional": True
-#        },
-#
-#        "size": {
-#            "select": "//ul[@id=\"detail_line_ul\"]//li/span/text()",
-#            "result": [1],
-#            "additional": True
-#        },
-#
-#        "package_url": {
-#            "select": "//div[@class=\"detail_down\"]/a/@onclick",
-#            "result": [0],
-#            "additional": True
-#        },
-#
-#        "app_version": {
-#            "select": "//div[@class=\"detail_line\"]/span/text()",
-#            "result": [0],
-#            "additional": True
-#        },
-#
-#        "description": {
-#            "select": "//div[@class=\"app_detail_infor\"]/p/text()"
-#        },
-#
-#        "images": {
-#            "select": "//ul[@id=\"detail_slider_ul\"]/li/img/@src"
-#        },
-#
-#        "related_app": {
-#            "select": "//ul[@class=\"recommend2 hotlist\"]/li/a/@title"
-#        },
-#
-#        "comment_url": {
-#            "select": "//div[@id=\"op_left\"]/a[1]/@href | //div[@class=\"imgoutbox\"]/ul/li[last()]/img/@src",
-#            "additional": True
-#        },
-#
-#        "app_id": {
-#            "select": "//div[@class=\"detail_down\"]/a/@onclick",
-#            "result":[0],
-#            "additional": True
-#        },
-#
-#        "category_detail": {
-#            "select": "//ul[@id=\"detail_line_ul\"]/li/text()",
-#            "result": [0],
-#            "additional": True
-#        }
-#    }
-#
+    config = {
+        "name": {
+            "select": '//div[@class=\"detail_line\"]/h3/text()',
+            "result": 0,
+        },
+
+        "update_time": {
+            "select": "//ul[@id=\"detail_line_ul\"]/li/text()",
+            "result": 1,
+            "additional": post_updatetime_anzh,
+        },
+
+        "developer": {
+            "select": "//div[@class=\"detail_line\"]/span/text()",
+            "result": 1,
+            "additional": post_developer_anzh,
+        },
+
+        "icon": {
+            "select": "//div[@class=\"detail_icon\"]/img/@src",
+            "result": 0
+        },
+
+        ===============
+        "download_num": {
+            "select": "//ul[@id=\"detail_line_ul\"]//li/span/text()",
+            "result": [0],
+            "additional": True
+        },
+
+        "size": {
+            "select": "//ul[@id=\"detail_line_ul\"]//li/span/text()",
+            "result": [1],
+            "additional": True
+        },
+
+        "package_url": {
+            "select": "//div[@class=\"detail_down\"]/a/@onclick",
+            "result": [0],
+            "additional": True
+        },
+
+        "app_version": {
+            "select": "//div[@class=\"detail_line\"]/span/text()",
+            "result": [0],
+            "additional": True
+        },
+
+        "description": {
+            "select": "//div[@class=\"app_detail_infor\"]/p/text()"
+        },
+
+        "images": {
+            "select": "//ul[@id=\"detail_slider_ul\"]/li/img/@src"
+        },
+
+        "related_app": {
+            "select": "//ul[@class=\"recommend2 hotlist\"]/li/a/@title"
+        },
+
+        "comment_url": {
+            "select": "//div[@id=\"op_left\"]/a[1]/@href | //div[@class=\"imgoutbox\"]/ul/li[last()]/img/@src",
+            "additional": True
+        },
+
+        "app_id": {
+            "select": "//div[@class=\"detail_down\"]/a/@onclick",
+            "result":[0],
+            "additional": True
+        },
+
+        "category_detail": {
+            "select": "//ul[@id=\"detail_line_ul\"]/li/text()",
+            "result": [0],
+            "additional": True
+        }
+    }
+
+    @classmethod
+    def post_updatetime_anzh (cls, val_raw):
+        val = '-'.join (re.findall (r'\d+', val_raw, re.M))
+        return val
+
+    @classmethod
+    def post_developer_anzh (cls, val_raw):
+        val = val_raw[4:0].strip ()
+        return val
+
+
 #    def extraction_postprocess(self,atr_name,additional): 
 #        ch_map = {'万':10000, '千':1000}        
 #        try:
