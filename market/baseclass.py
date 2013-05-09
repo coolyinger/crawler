@@ -4,6 +4,8 @@
 import os
 import sys
 import logging
+import pprint
+import scrapy
 from scrapy.selector import HtmlXPathSelector
 
 working_dir = os.path.abspath(os.path.realpath(__file__)+ '/../../')
@@ -16,8 +18,13 @@ class baseclass (object):
     def __init__ (self):
         pass
 
-    def parse (self, reponse, item):
-        hxs = HtmlXPathSelector (reponse)
+    def parse (self, response, item):
+        print '====', type(response)
+        if not isinstance (response, scrapy.http.response.html.HtmlResponse):
+            # crawl a non-text web ( exp: http://***.apk)
+            logging.debug ("Skip non-text web:%s" % response.url)
+            return item
+        hxs = HtmlXPathSelector (response)
 
         for key, val in self.config.items ():
             if not "select" in val:
@@ -33,8 +40,10 @@ class baseclass (object):
                 if not result:
                     raise Exception ("result is NULL")
             except Exception as E:
-                log_str = "[XPATH-ERROR (%s)-(%s)]: %s" % (self.domain, key, E)
+                log_str = "[XPATH-ERROR (%s)-(%s)-(%s)]: %s" % (self.domain,
+                                                        key, response.url, E)
                 logging.error (log_str)
+                item[key] = ""
                 continue
 
             # post processing

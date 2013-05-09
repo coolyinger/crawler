@@ -20,54 +20,52 @@ import log, conf
 class UmspiderSpider(CrawlSpider):
     name = 'UMSpider'
 
-    log.setup_logging ("xlcrawler", False)
-    market = sys.stdin.readline ().strip ()
-    start_urls = eval (sys.stdin.readline ())
-    category_general = sys.stdin.readline ().strip ()
-    rule = sys.stdin.readline ().strip ()
-    sys.stdin.flush ()
-
-    marketConfig = config_factory.get_market_config (market)
-    if not marketConfig:
-        logging.error ("no market (%s)" % market)
-        sys.exit (1)
-
-    allowed_domains = []
-    allowed_domains.append (marketConfig.domain)
-
-    DEPTH_LIMIT = 1
-    DEPTH_PRIORITY = 1
-    SCHEDULER_DISK_QUEUE = 'scrapy.squeue.PickleFifoDiskQueue'
-    SCHEDULER_MEMORY_QUEUE = 'scrapy.squeue.FifoMemoryQueue'
-
-    rules = (
-        Rule(SgmlLinkExtractor(allow = rule), callback='parse_item', follow=True),
-    )
+#    log.setup_logging ("xlcrawler", False)
+#    market = sys.stdin.readline ().strip ()
+#    start_urls = eval (sys.stdin.readline ())
+#    category_general = sys.stdin.readline ().strip ()
+#    rule = sys.stdin.readline ().strip ()
+#    sys.stdin.flush ()
+#
+#    marketConfig = config_factory.get_market_config (market)
+#    if not marketConfig:
+#        logging.error ("no market (%s)" % market)
+#        sys.exit (1)
+#
+#    allowed_domains = []
+#    allowed_domains.append (marketConfig.domain)
+#
+#    DEPTH_LIMIT = 1
+#    DEPTH_PRIORITY = 1
+#    SCHEDULER_DISK_QUEUE = 'scrapy.squeue.PickleFifoDiskQueue'
+#    SCHEDULER_MEMORY_QUEUE = 'scrapy.squeue.FifoMemoryQueue'
+#
+#    rules = (
+#        Rule(SgmlLinkExtractor(allow = rule), callback='parse_item', follow=True),
+#    )
 
     def parse_item(self, response):
         logging.debug ("parse url: %s" % response.url)
         item = CoreItem ()
         item["market"] = self.market
+        item["url"] = response.url
         item["category_general"] = self.category_general
         item = self.marketConfig.parse (response, item)
 
-        logging.debug ('\n============================================\n')
+        log_str = "crawl a APP:\n"
         for k, v in item.items ():
             if k == "related_app":
-                print k
+                log_str += "%s:\n" % k
                 for rela in v:
-                    log_str = "%-20s : %s" % ("", rela.encode ("utf-8"))
-                    logging.debug (log_str)
+                    log_str += "%-20s : %s\n" % ("", rela.encode ("utf-8"))
                 continue
             if isinstance (v, unicode):
-                log_str = "%-20s : %s" % (k, v.encode ("utf-8"))
-                logging.debug (log_str)
+                log_str += "%-20s : %s\n" % (k, v.encode ("utf-8"))
             elif isinstance (v, list):
-                log_str = "%-20s : %s" % (k, pprint.pformat (v, indent = 20))
-                logging.debug (log_str)
+                log_str += "%-20s : %s\n" % (k, pprint.pformat (v, indent = 20))
             else:
-                log_str = "%-20s : %s" % (k, v)
-                logging.debug (log_str)
+                log_str += "%-20s : %s\n" % (k, v)
+        logging.debug (log_str)
         return item
 
     def make_requests_from_url (self, url):

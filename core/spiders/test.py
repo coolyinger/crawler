@@ -20,13 +20,14 @@ import log
 class TestSpider(BaseSpider):
     name = "test"
 
-    market = "AnzhItem"
+    market = "HiApkItem"
     start_urls = [
-            "http://www.anzhi.com/soft_814844.html",
-            "http://anzhi.com/soft_743451.html",
+            "http://apk.hiapk.com/html/2013/05/1445026.html",
+            "http://apk.hiapk.com/html/2013/05/1434939.html",
+            "http://cdn.market.hiapk.com/data/upload/2013/05_06/10/com.zdworks.android.zdclock_104048.apk",
             ]
 
-    log.setup_logging ("test", "1.0")
+    log.setup_logging ("test", False)
 
     marketConfig = config_factory.get_market_config (market)
     allowed_domains = []
@@ -37,18 +38,18 @@ class TestSpider(BaseSpider):
         item = CoreItem ()
         item["market"] = self.market
         self.marketConfig.parse (response, item)
-        print '\n===================================================\n'
-        for k, v in item.items ():
-            if k == "related_app":
-                print k
-                for rela in v:
-                    print "%-20s : %s" % ("", rela.encode ("utf-8"))
-                continue
-            if isinstance (v, unicode):
-                print "%-20s : %s" % (k, v.encode ("utf-8"))
-            elif isinstance (v, list):
-                print "%-20s : %s" % (k, pprint.pformat (v, indent = 20))
-            else:
-                print "%-20s : %s" % (k, v)
+        #print '\n===================================================\n'
+        #for k, v in item.items ():
+        #    if k == "related_app":
+        #        print k
+        #        for rela in v:
+        #            print "%-20s : %s" % ("", rela.encode ("utf-8"))
+        #        continue
+        #    if isinstance (v, unicode):
+        #        print "%-20s : %s" % (k, v.encode ("utf-8"))
+        #    elif isinstance (v, list):
+        #        print "%-20s : %s" % (k, pprint.pformat (v, indent = 20))
+        #    else:
+        #        print "%-20s : %s" % (k, v)
         return item
 

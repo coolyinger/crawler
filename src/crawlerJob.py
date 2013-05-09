@@ -21,7 +21,7 @@ class crawlerJob (object):
             logging.warn ("Skip links: %s" % pprint.pformat (self.links))
             return
 
-        subproc = subprocess.Popen("scrapy crawl UMSpider",
+        subproc = subprocess.Popen("scrapy crawl UMSpider >out 2>&1",
                                    stdin = subprocess.PIPE, shell = True)
         subproc.stdin.write (self.market + "\n")
         subproc.stdin.write (str (self.links) + "\n")
