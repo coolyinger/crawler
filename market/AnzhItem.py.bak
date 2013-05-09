@@ -1,0 +1,222 @@
+#!/bin/env python
+#-*- coding:utf-8 -*-
+
+import re
+import os
+
+from baseclass import baseclass
+import CategoryMap
+
+class AnzhItemConfig(baseclass):
+    domain = "anzhi.com"
+
+    config = {
+        "app_id": {
+            "select": "//div[@class=\"detail_down\"]/a/@onclick",
+            "result":0,
+            "additional": post_appid_anzh,
+        },
+
+        "app_version": {
+            "select": "//div[@class=\"detail_line\"]/span/text()",
+            "result": 0,
+            "additional": post_version_anzh,
+        },
+
+        "market": {
+            # pass in
+        },
+
+        "name": {
+            "select": '//div[@class=\"detail_line\"]/h3/text()',
+            "result": 0,
+        },
+
+        "size": {
+            "select": "//ul[@id=\"detail_line_ul\"]//li/span/text()",
+            "result": 1,
+            "additional": post_size_anzh,
+        },
+
+        "language": {
+            #  parse at last because it use 'name' item
+        },
+
+        "package_name": {
+            "select": "//div[@class=\"detail_icon\"]/img/@src",
+            "result": 0,
+            "additional": post_packagename_anzh,
+        },
+
+        "version_name": {
+            # non use
+        },
+
+        "developer": {
+            "select": "//div[@class=\"detail_line\"]/span/text()",
+            "result": 1,
+            "additional": post_developer_anzh,
+        },
+
+        "update_time": {
+            "select": "//ul[@id=\"detail_line_ul\"]/li/text()",
+            "result": 1,
+            "additional": post_updatetime_anzh,
+        },
+
+        "description": {
+            "select": "//div[@class=\"app_detail_infor\"]/p/text()",
+            "result": 0,
+            "additional": post_desc_anzh,
+        },
+
+        "category_general": {
+            # pass in
+        },
+
+        "category_detail": {
+            "select": "//ul[@id=\"detail_line_ul\"]/li/text()",
+            "result": 0,
+            "additional": post_categorydetail_anzh,
+        },
+
+        "icon": {
+            "select": "//div[@class=\"detail_icon\"]/img/@src",
+            "result": 0
+        },
+
+        "images": {
+            "select": "//ul[@id=\"detail_slider_ul\"]/li/img/@src"
+        },
+
+        "comment_url": {
+                # parse last because it use 'app_id'
+        },
+
+        "package_url": {
+            "select": "//div[@class=\"detail_down\"]/a/@onclick",
+            "result": [0],
+            "additional": True
+        },
+
+        "download_num": {
+            "select": "//ul[@id=\"detail_line_ul\"]//li/span/text()",
+            "result": [0],
+            "additional": True
+        },
+
+
+        "related_app": {
+            "select": "//ul[@class=\"recommend2 hotlist\"]/li/a/@title"
+        },
+
+    }
+
+    @classmethod
+    def post_updatetime_anzh (cls, val_raw):
+        val = '-'.join (re.findall (r'\d+', val_raw, re.M))
+        return val
+
+    @classmethod
+    def post_developer_anzh (cls, val_raw):
+        val = val_raw[4:0].strip ()
+        return val
+
+    @classmethod
+    def post_appid_anzh (cls, val_raw):
+        val = re.findall(r'[0-9].*[0-9]', val_raw, re.M)[0]
+        return val
+
+    @classmethod
+    def post_version_anzh (cls, val_raw):
+        val = re.findall(r'[0-9].*[0-9]',additional,re.M)[0]
+        return val
+
+    @classmethod
+    def post_size_anzh (cls, val_raw):
+        val = re.findall(r'[0-9].*[0-9].*',additional,re.M)[0]
+        return val
+
+    @classmethod
+    def post_packagename_anzh (cls, val_raw):
+        base = os.basename (val_raw)
+        val = base.split ('_')[0]
+        return val
+
+    @classmethod
+    def post_desc_anzh (cls, val_raw):
+        val = val_raw.split()
+        return val
+
+    @classmethod
+    def post_categorydetail_anzh (cls, val_raw):
+        if len (val_raw) <= 5:
+            return ""
+        category = val_raw[5:]
+        val = CategoryMap.CategoryDetailMapDic["AnzhItem"].get(category,
+                                                               "Others")
+        return val
+
+
+#    def extraction_postprocess(self,atr_name,additional): 
+#        ch_map = {'万':10000, '千':1000}        
+#        try:
+#            if atr_name == "update_time" or atr_name == "app_version":
+#                return re.findall(r'[0-9].*[0-9]',additional,re.M)[0]
+#
+#            elif atr_name == "download_num":
+#                result = 0
+#                if additional not in ['',None,[]]:
+#                    base = re.findall(r'[0-9]{0,}',additional,re.M)
+#                    base = ''.join(base)
+#                    if base != '':
+#                        for k,v in ch_map.iteritems():
+#                            if k in additional.encode('utf-8'):
+#                                result = int(base)*v
+#                                break
+#                return str(result)
+#
+#            elif atr_name == "size":
+#                return re.findall(r'[0-9].*[0-9].*',additional,re.M)[0]
+#            elif atr_name == "developer":
+#                return additional[4:].strip()
+#            elif atr_name == "comment_url":
+#                if len(additional)>1:
+#                    apk_id = re.findall(r'[0-9].*[0-9]',additional[0],re.M)[0]
+#                    str_list = additional[1].split('/')
+#                    t_pkg_name = str_list[len(str_list)-1].rsplit('.',1)[0]
+#                    url = "http://www.anzhi.com/comment.php?softid="+apk_id+"&package="+t_pkg_name+"&rand=0.2&c_page=0"
+#                    return url
+#                else:
+#                    return ""
+#                    '''
+#                    tag_regex_list = ["<h2(.*).*</h2>","<span(.*).*</span>","<div class=\"cot l\">.*</div>"]
+#                    myHTMLParser = MyHTMLParser()
+#                    return myHTMLParser.start_parsing(url, tag_regex_list)
+#                else:
+#                    return additional
+#                    '''
+#            elif atr_name == "app_id":
+#                if len(additional)>0:
+#                    try:
+#                        app_id = re.findall(r'[0-9].*[0-9]',additional,re.M)[0]
+#                    except Exception:
+#                        app_id = -1
+#                else:
+#                    app_id = -1
+#                return app_id 
+#            elif atr_name == 'package_url':
+#                app_id = re.findall(r'[0-9]+', additional)[0]
+#                pkg_url = "http://www.anzhi.com/dl_app.php?s=%s&n=5" % app_id
+#                return pkg_url
+#
+#            elif atr_name == "category_detail":
+#                category_detail_raw = additional.split(u"：")
+#                category_detail = ""
+#                if len(category_detail_raw) > 1:
+#                    category_detail = CategoryMap.CategoryDetailMapDic["AnzhItem"].get(category_detail_raw[1],"Others")
+#                return category_detail
+#        except Exception as E: 
+#            logger.error('parse additional info error: %s' % atr_name)
+#            return additional
+

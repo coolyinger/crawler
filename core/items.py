@@ -9,7 +9,7 @@ class CoreItem(Item):
 
     app_id              = Field ()
     app_version         = Field ()
-    app_market          = Field ()
+    market              = Field ()
 
     name                = Field ()
     size                = Field ()

@@ -46,9 +46,11 @@ def setup_logging (appname, namebyPID = True):
     FILE_NAME = "%s.log" % appname
     BASE_DIR = conf.LOG_PATH
     FILE_MODE = "ae"
-    FILE_FORMAT = "[%(asctime)s %(process)-5d (%(thread)d)] " \
+    #FILE_FORMAT = "[%(asctime)s %(process)-5d (%(thread)d)] " \
+    #        "%(levelname)-7s (%(filename)s:%(lineno)d) : %(message)s"
+    FILE_FORMAT = "[%(asctime)s] " \
             "%(levelname)-7s (%(filename)s:%(lineno)d) : %(message)s"
-    DATEFMT = "%Y-%m-%d %H:%M:%S"
+    DATEFMT = "%d %H:%M:%S"
 
     CATEGORY = {"debug" : logging.DEBUG,
                 "error" : logging.ERROR}

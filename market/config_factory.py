@@ -17,5 +17,5 @@ def get_market_config (market):
         config = eval (config_str)
     except NameError:
         config = None
-    return config
+    return config ()
 

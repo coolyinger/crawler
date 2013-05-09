@@ -1,159 +1,196 @@
 #!/bin/env python
 #-*- coding:utf-8 -*-
 
+import re
+import os
+
 from baseclass import baseclass
+import CategoryMap
 
 class AnzhItemConfig(baseclass):
     domain = "anzhi.com"
 
-    config = {
-        "name": {
-            "select": '//div[@class=\"detail_line\"]/h3/text()',
-            "result": 0,
-        },
+    def __init__ (self):
+        self.config = {
+                "app_id": {
+                    "select": "//div[@class=\"detail_down\"]/a/@onclick",
+                    "result":0,
+                    "additional": self.post_appid_anzh,
+                },
 
-        "update_time": {
-            "select": "//ul[@id=\"detail_line_ul\"]/li/text()",
-            "result": 1,
-            "additional": post_updatetime_anzh,
-        },
+                "app_version": {
+                    "select": "//div[@class=\"detail_line\"]/span/text()",
+                    "result": 0,
+                    "additional": self.post_version_anzh,
+                },
 
-        "developer": {
-            "select": "//div[@class=\"detail_line\"]/span/text()",
-            "result": 1,
-            "additional": post_developer_anzh,
-        },
+                "market": {
+                    # pass in
+                },
 
-        "icon": {
-            "select": "//div[@class=\"detail_icon\"]/img/@src",
-            "result": 0
-        },
+                "name": {
+                    "select": '//div[@class=\"detail_line\"]/h3/text()',
+                    "result": 0,
+                },
 
-        ===============
-        "download_num": {
-            "select": "//ul[@id=\"detail_line_ul\"]//li/span/text()",
-            "result": [0],
-            "additional": True
-        },
+                "size": {
+                    "select": "//ul[@id=\"detail_line_ul\"]//li/span/text()",
+                    "result": 1,
+                    "additional": self.post_size_anzh,
+                },
 
-        "size": {
-            "select": "//ul[@id=\"detail_line_ul\"]//li/span/text()",
-            "result": [1],
-            "additional": True
-        },
+                "language": {
+                    "select": '//div[@class=\"detail_line\"]/h3/text()',
+                    "result": 0,
+                    "additional": self.post_lang_anzh,
+                },
 
-        "package_url": {
-            "select": "//div[@class=\"detail_down\"]/a/@onclick",
-            "result": [0],
-            "additional": True
-        },
+                "package_name": {
+                    "select": "//div[@class=\"detail_icon\"]/img/@src",
+                    "result": 0,
+                    "additional": self.post_packagename_anzh,
+                },
 
-        "app_version": {
-            "select": "//div[@class=\"detail_line\"]/span/text()",
-            "result": [0],
-            "additional": True
-        },
+                "version_name": {
+                    # non use
+                },
 
-        "description": {
-            "select": "//div[@class=\"app_detail_infor\"]/p/text()"
-        },
+                "developer": {
+                    "select": "//div[@class=\"detail_line\"]/span/text()",
+                    "result": 1,
+                    "additional": self.post_developer_anzh,
+                },
 
-        "images": {
-            "select": "//ul[@id=\"detail_slider_ul\"]/li/img/@src"
-        },
+                "update_time": {
+                    "select": "//ul[@id=\"detail_line_ul\"]/li/text()",
+                    "result": 1,
+                    "additional": self.post_updatetime_anzh,
+                },
 
-        "related_app": {
-            "select": "//ul[@class=\"recommend2 hotlist\"]/li/a/@title"
-        },
+                "description": {
+                    "select": "//div[@class=\"app_detail_infor\"]/p/text()",
+                    "result": 0,
+                    "additional": self.post_desc_anzh,
+                },
 
-        "comment_url": {
-            "select": "//div[@id=\"op_left\"]/a[1]/@href | //div[@class=\"imgoutbox\"]/ul/li[last()]/img/@src",
-            "additional": True
-        },
+                "category_general": {
+                    # pass in
+                },
 
-        "app_id": {
-            "select": "//div[@class=\"detail_down\"]/a/@onclick",
-            "result":[0],
-            "additional": True
-        },
+                "category_detail": {
+                    "select": "//ul[@id=\"detail_line_ul\"]/li/text()",
+                    "result": 0,
+                    "additional": self.post_categorydetail_anzh,
+                },
 
-        "category_detail": {
-            "select": "//ul[@id=\"detail_line_ul\"]/li/text()",
-            "result": [0],
-            "additional": True
-        }
-    }
+                "icon": {
+                    "select": "//div[@class=\"detail_icon\"]/img/@src",
+                    "result": 0
+                },
 
-    @classmethod
-    def post_updatetime_anzh (cls, val_raw):
+                "images": {
+                    "select": "//ul[@id=\"detail_slider_ul\"]/li/img/@src"
+                },
+
+                "comment_url": {
+                    "select": "//div[@class=\"detail_down\"]/a/@onclick",
+                    "result":0,
+                    "additional": self.post_comenturl_anzh,
+                },
+
+                "package_url": {
+                    "select": "//div[@class=\"detail_down\"]/a/@onclick",
+                    "result":0,
+                    "additional": self.post_packageurl_anzh,
+                },
+
+                "url": {
+                        # pass in
+                },
+
+                "related_app": {
+                    "select": "//ul[@class=\"recommend2 hotlist\"]/li/a/@title"
+                },
+
+                "os_support_version": {
+                    "select": "//ul[@id=\"detail_line_ul\"]/li[5]/text()",
+                    "result":0,
+                    "additional": self.post_ossupport_anzh,
+                },
+
+                "price": {
+                    "select": "//ul[@id=\"detail_line_ul\"]/li[6]/span/text()",
+                    "result":0,
+                    "additional": self.post_price_anzh,
+                },
+
+                #"email": {
+                #    "select": "//ul[@id=\"detail_line_ul\"]/li[6]/text()",
+                #    "result":0,
+                #    "additional": self.post_price_anzh,
+                #},
+                #"devpage": {
+                #    "select": "//ul[@id=\"detail_line_ul\"]/li[6]/text()",
+                #    "result":0,
+                #    "additional": self.post_price_anzh,
+                #},
+            }
+
+    def post_updatetime_anzh (self, val_raw):
         val = '-'.join (re.findall (r'\d+', val_raw, re.M))
         return val
 
-    @classmethod
-    def post_developer_anzh (cls, val_raw):
-        val = val_raw[4:0].strip ()
+    def post_developer_anzh (self, val_raw):
+        val = val_raw[4:].strip ()
         return val
 
+    def post_appid_anzh (self, val_raw):
+        val = re.findall(r'[0-9].*[0-9]', val_raw, re.M)[0]
+        return val
 
-#    def extraction_postprocess(self,atr_name,additional): 
-#        ch_map = {'万':10000, '千':1000}        
-#        try:
-#            if atr_name == "update_time" or atr_name == "app_version":
-#                return re.findall(r'[0-9].*[0-9]',additional,re.M)[0]
-#
-#            elif atr_name == "download_num":
-#                result = 0
-#                if additional not in ['',None,[]]:
-#                    base = re.findall(r'[0-9]{0,}',additional,re.M)
-#                    base = ''.join(base)
-#                    if base != '':
-#                        for k,v in ch_map.iteritems():
-#                            if k in additional.encode('utf-8'):
-#                                result = int(base)*v
-#                                break
-#                return str(result)
-#
-#            elif atr_name == "size":
-#                return re.findall(r'[0-9].*[0-9].*',additional,re.M)[0]
-#            elif atr_name == "developer":
-#                return additional[4:].strip()
-#            elif atr_name == "comment_url":
-#                if len(additional)>1:
-#                    apk_id = re.findall(r'[0-9].*[0-9]',additional[0],re.M)[0]
-#                    str_list = additional[1].split('/')
-#                    t_pkg_name = str_list[len(str_list)-1].rsplit('.',1)[0]
-#                    url = "http://www.anzhi.com/comment.php?softid="+apk_id+"&package="+t_pkg_name+"&rand=0.2&c_page=0"
-#                    return url
-#                else:
-#                    return ""
-#                    '''
-#                    tag_regex_list = ["<h2(.*).*</h2>","<span(.*).*</span>","<div class=\"cot l\">.*</div>"]
-#                    myHTMLParser = MyHTMLParser()
-#                    return myHTMLParser.start_parsing(url, tag_regex_list)
-#                else:
-#                    return additional
-#                    '''
-#            elif atr_name == "app_id":
-#                if len(additional)>0:
-#                    try:
-#                        app_id = re.findall(r'[0-9].*[0-9]',additional,re.M)[0]
-#                    except Exception:
-#                        app_id = -1
-#                else:
-#                    app_id = -1
-#                return app_id 
-#            elif atr_name == 'package_url':
-#                app_id = re.findall(r'[0-9]+', additional)[0]
-#                pkg_url = "http://www.anzhi.com/dl_app.php?s=%s&n=5" % app_id
-#                return pkg_url
-#
-#            elif atr_name == "category_detail":
-#                category_detail_raw = additional.split(u"：")
-#                category_detail = ""
-#                if len(category_detail_raw) > 1:
-#                    category_detail = CategoryMap.CategoryDetailMapDic["AnzhItem"].get(category_detail_raw[1],"Others")
-#                return category_detail
-#        except Exception as E: 
-#            logger.error('parse additional info error: %s' % atr_name)
-#            return additional
+    def post_version_anzh (self, val_raw):
+        val = re.findall(r'[0-9].*[0-9]', val_raw, re.M)[0]
+        return val
 
+    def post_size_anzh (self, val_raw):
+        val = val_raw[5:]
+        return val
+
+    def post_packagename_anzh (self, val_raw):
+        base = os.path.basename (val_raw)
+        val = base.split ('_')[0]
+        return val
+
+    def post_desc_anzh (self, val_raw):
+        val = val_raw.strip ()
+        return val
+
+    def post_categorydetail_anzh (self, val_raw):
+        category = val_raw[5:]
+        val = CategoryMap.CategoryDetailMapDic["AnzhItem"].get(category,
+                                                               "Others")
+        return val
+
+    def post_lang_anzh (self, val_raw):
+        if len (val_raw.encode ("utf-8")) != len (val_raw):
+            return "ch"
+        else:
+            return "en"
+
+    def post_comenturl_anzh (self, val_raw):
+        app_id = self.post_appid_anzh (val_raw)
+        comment_url = "http://anzhi.com/comment.php?softid=%s" % app_id
+        return comment_url
+
+    def post_packageurl_anzh (self, val_raw):
+        app_id = self.post_appid_anzh (val_raw)
+        package_url = "http://anzhi.com/dl_app.php?s=%s&n=5" % app_id
+        return package_url
+
+    def post_ossupport_anzh (self, val_raw):
+        os = val_raw[5:]
+        return os
+
+    def post_price_anzh (self, val_raw):
+        price = val_raw[3:]
+        return price
