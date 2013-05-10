@@ -97,11 +97,10 @@ class HiApkItemConfig(baseclass):
                     "select": "//div[@id=\"relatedSoftBox\"]//dt/a/text()",
                 },
 
-                #"os_support_version": {
-                #    "select": "//ul[@id=\"detail_line_ul\"]/li[5]/text()",
-                #    "result":0,
-                #    "additional": self.post_ossupport_anzh,
-                #},
+                "os_support_version": {
+                    "select": "//label[@id=\"ctl00_AndroidMaster_Content_Apk_SoftSuitSdk\"]/text()",
+                    "result":0,
+                },
 
                 #"price": {
                 #    "select": "//ul[@id=\"detail_line_ul\"]/li[6]/span/text()",

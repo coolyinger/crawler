@@ -3,9 +3,9 @@
 
 import os
 import sys
-import logging
 import pprint
 import scrapy
+import logging
 from scrapy.selector import HtmlXPathSelector
 
 working_dir = os.path.abspath(os.path.realpath(__file__)+ '/../../')

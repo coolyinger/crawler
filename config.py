@@ -8,4 +8,4 @@ PORT = 27017
 DB = "marketcrawler"
 SLAVE = False
 
-MARKETS = ["HiApkItem"]
+MARKETS = ["AppchItem"]

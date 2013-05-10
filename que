@@ -1,2 +1,14 @@
-1. Hiapk's comment_url cannot found
-2. Hiapk's package_url cannot found
+1. Hiapk:
+        comment_url cannot found
+        package_url cannot found
+
+2. Appch:
+        comment_url cannot found
+
+3. scrapy will get .apk web when crawling, and set ignore_extions doesn't work.
+   crawling .apk spend a lot of time.
+
+
+4. 抓取到不是APP详情页的WEB后，日志打印一堆错
+
+

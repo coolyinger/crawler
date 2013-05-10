@@ -2,6 +2,8 @@ from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from core.items import CoreItem
+from scrapy import linkextractor
+
 
 import os
 import logging
@@ -20,7 +22,7 @@ import log, conf
 class UmspiderSpider(CrawlSpider):
     name = 'UMSpider'
 
-#    log.setup_logging ("xlcrawler", False)
+    log.setup_logging ("xlcrawler", False)
 #    market = sys.stdin.readline ().strip ()
 #    start_urls = eval (sys.stdin.readline ())
 #    category_general = sys.stdin.readline ().strip ()
@@ -40,8 +42,12 @@ class UmspiderSpider(CrawlSpider):
 #    SCHEDULER_DISK_QUEUE = 'scrapy.squeue.PickleFifoDiskQueue'
 #    SCHEDULER_MEMORY_QUEUE = 'scrapy.squeue.FifoMemoryQueue'
 #
+#    deny_ext = linkextractor.IGNORED_EXTENSIONS
+#    deny_ext.append ('apk')
+#
 #    rules = (
-#        Rule(SgmlLinkExtractor(allow = rule), callback='parse_item', follow=True),
+#        Rule(SgmlLinkExtractor(allow = rule, deny_extensions = deny_ext),
+#             callback='parse_item', follow=True),
 #    )
 
     def parse_item(self, response):

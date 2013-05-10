@@ -1,5 +1,5 @@
 from scrapy.spider import BaseSpider
-from core.items import CoreItem
+from scrapy import linkextractor
 
 import os
 from os import path
@@ -20,11 +20,11 @@ import log
 class TestSpider(BaseSpider):
     name = "test"
 
-    market = "HiApkItem"
+    market = "NDuoaItem"
     start_urls = [
-            "http://apk.hiapk.com/html/2013/05/1445026.html",
-            "http://apk.hiapk.com/html/2013/05/1434939.html",
-            "http://cdn.market.hiapk.com/data/upload/2013/05_06/10/com.zdworks.android.zdclock_104048.apk",
+            "http://www.nduoa.com/package/detail/11852",
+            "http://www.nduoa.com/package/detail/7847",
+            "http://www.nduoa.com/package/detail/189581",
             ]
 
     log.setup_logging ("test", False)
@@ -38,18 +38,19 @@ class TestSpider(BaseSpider):
         item = CoreItem ()
         item["market"] = self.market
         self.marketConfig.parse (response, item)
-        #print '\n===================================================\n'
-        #for k, v in item.items ():
-        #    if k == "related_app":
-        #        print k
-        #        for rela in v:
-        #            print "%-20s : %s" % ("", rela.encode ("utf-8"))
-        #        continue
-        #    if isinstance (v, unicode):
-        #        print "%-20s : %s" % (k, v.encode ("utf-8"))
-        #    elif isinstance (v, list):
-        #        print "%-20s : %s" % (k, pprint.pformat (v, indent = 20))
-        #    else:
-        #        print "%-20s : %s" % (k, v)
-        return item
 
+        log_str = "crawl a APP:\n"
+        for k, v in item.items ():
+            if k == "related_app":
+                log_str += "%s:\n" % k
+                for rela in v:
+                    log_str += "%-20s : %s\n" % ("", rela.encode ("utf-8"))
+                continue
+            if isinstance (v, unicode):
+                log_str += "%-20s : %s\n" % (k, v.encode ("utf-8"))
+            elif isinstance (v, list):
+                log_str += "%-20s : %s\n" % (k, pprint.pformat (v, indent = 20))
+            else:
+                log_str += "%-20s : %s\n" % (k, v)
+        logging.debug (log_str)
+        return item
