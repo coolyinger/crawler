@@ -58,4 +58,5 @@ class baseclass (object):
                     result = ""
 
             item[key] = result
+        item["available"] = 1
         return item

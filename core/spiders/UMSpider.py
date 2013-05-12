@@ -60,20 +60,6 @@ class UmspiderSpider(CrawlSpider):
         item["category_general"] = self.category_general
         item = self.marketConfig.parse (response, item)
 
-        #log_str = "crawl a APP:\n"
-        #for k, v in item.items ():
-        #    if k == "related_app":
-        #        log_str += "%s:\n" % k
-        #        for rela in v:
-        #            log_str += "%-20s : %s\n" % ("", rela.encode ("utf-8"))
-        #        continue
-        #    if isinstance (v, unicode):
-        #        log_str += "%-20s : %s\n" % (k, v.encode ("utf-8"))
-        #    elif isinstance (v, list):
-        #        log_str += "%-20s : %s\n" % (k, pprint.pformat (v, indent = 20))
-        #    else:
-        #        log_str += "%-20s : %s\n" % (k, v)
-        #logging.debug (log_str)
         return item
 
     def make_requests_from_url (self, url):

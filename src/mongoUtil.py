@@ -27,6 +27,12 @@ class mongoUtil (object):
                                           fields = fields, upsert = upsert,
                                           new = new)
 
+    def get_item_property (self, key, fields = None):
+        if fields is None:
+            return self.form.find(key)
+        else:
+            return self.form.find(key,fields=fields)
+
     @staticmethod
     def check_conn (ip = "localhost", port = 27017):
         try:

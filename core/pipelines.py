@@ -16,8 +16,12 @@ import config_factory
 from mongoUtil import mongoUtil
 import conf
 
-def log_item (item):
-    log_str = "store a APP:\n"
+def log_item (item, new_app):
+    if new_app:
+        log_str = "crawl a new APP:\n"
+    else:
+        log_str = "modify a APP:\n"
+
     for k, v in item.items ():
         if k == "related_app":
             log_str += "%s:\n" % k
@@ -36,16 +40,28 @@ class UmcrawlerPipeline(object):
 
     appmeta = mongoUtil (conf.DB, "appmeta",
                          conf.IP, conf.PORT)
-    def process_item(self, item, spider):
-        if (not item["app_id"]) or (not item["app_version"]) or (not item["market"]):
+    def process_item (self, item, spider):
+        app_id = item.get ("app_id", None)
+        app_ver = item.get ("app_version", None)
+        market = item.get ("market", None)
+
+        if (not app_id) or (not app_ver) or (not market):
             # filter crawled web which don't belong APP detail web
             raise DropItem("item name invalid: %s" % item)
 
         # store item
-        key = {"app_id": item["app_id"],
-               "app_version": item["app_version"],
-               "market": item["market"]}
+        key = {"app_id": app_id,
+               "app_version": app_ver,
+               "market": market}
+        new_app = False
+
+        cursor = self.appmeta.get_item_property (key)
+
+        if cursor.count() == 0:
+            new_app = True
+            # report a new app is crawled
+            pass
 
         self.appmeta.upsert_item (key, dict(item))
-        log_item (item)
+        log_item (item, new_app)
         return item
