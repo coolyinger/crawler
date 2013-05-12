@@ -20,14 +20,13 @@ import log
 class TestSpider(BaseSpider):
     name = "test"
 
-    market = "NDuoaItem"
+    market = "AndrmarketItem"
     start_urls = [
-            "http://www.nduoa.com/package/detail/11852",
-            "http://www.nduoa.com/package/detail/7847",
-            "http://www.nduoa.com/package/detail/189581",
+            "http://play.google.com/store/apps/details?id=com.evernote.food",
+            "https://play.google.com/store/apps/details?id=air.albinoblacksheep.run",
             ]
 
-    log.setup_logging ("test", False)
+    log.setup_logging ("xlcrawler", False)
 
     marketConfig = config_factory.get_market_config (market)
     allowed_domains = []

@@ -1,11 +1,16 @@
 #!/bin/env python
 #-*- coding:utf-8 -*-
 
-LOG_PATH = "/home/log/"
 
 IP = "localhost"
 PORT = 27017
 DB = "marketcrawler"
 SLAVE = False
+LOG_PATH = "/home/log/"
 
-MARKETS = ["AppchItem"]
+# spider about
+SPIDER_OUTTIME = 20
+
+# market about
+MARKETS = ["HiApkItem"]
+

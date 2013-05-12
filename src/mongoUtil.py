@@ -5,7 +5,6 @@ import logging
 import pymongo
 from pymongo.connection import Connection
 
-
 class mongoUtil (object):
 
     def __init__ (self, database, table, ip = "localhost", port = 27017):
@@ -18,6 +17,8 @@ class mongoUtil (object):
     def update_items (self, spec, val):
         self.form.update (spec, {"$set":val}, upsert = False, multi = True)
 
+    def upsert_item (self, spec, val):
+        self.form.update (spec, {"$set":val}, upsert = True)
 
     def find_and_modify (self, query = {}, update = None, sort = {},
                          fields = {}, upsert = False, new = False):

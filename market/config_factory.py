@@ -5,8 +5,8 @@ from AnzhItem import AnzhItemConfig
 from HiApkItem import HiApkItemConfig
 from AppchItem import AppchItemConfig
 from NDuoaItem import NDuoaItemConfig
-from ITunesItem import ITunesItemConfig
-from WanDouJiaItem import WanDouJiaItemConfig
+#from ITunesItem import ITunesItemConfig
+#from WanDouJiaItem import WanDouJiaItemConfig
 from AndrmarketItem import AndrmarketItemConfig
 
 
